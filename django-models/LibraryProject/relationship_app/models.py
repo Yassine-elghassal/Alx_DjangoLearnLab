@@ -1,5 +1,6 @@
 # relationship_app/models.py
 from django.db import models
+from django.contrib.auth.models import User
 
 # Author model: This will store author names
 class Author(models.Model):
@@ -29,25 +30,18 @@ class Library(models.Model):
 
 # Librarian model: This will store librarian names, each assigned to a specific library (OneToOne relationship)
 class Librarian(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)  # Allow null for existing records
     name = models.CharField(max_length=100)
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
-# relationship_app/models.py
-from django.db import models
-from django.contrib.auth.models import User
 
+# UserProfile model: This model will extend the User model
 class UserProfile(models.Model):
-    USER_ROLE_CHOICES = (
-        ('Admin', 'Admin'),
-        ('Librarian', 'Librarian'),
-        ('Member', 'Member'),
-    )
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=10, choices=USER_ROLE_CHOICES, default='Member')
+    role = models.CharField(max_length=50, choices=[('Admin', 'Admin'), ('Librarian', 'Librarian'), ('Member', 'Member')])
 
     def __str__(self):
-        return f"{self.user.username} - {self.role}"
+        return f"{self.user.username}'s profile"
