@@ -109,3 +109,36 @@ def librarian_view(request):
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+# relationship_app/views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import permission_required
+from .models import Book
+
+# View to add a book (only users with 'can_add_book' permission can access)
+@permission_required('relationship_app.can_add_book', raise_exception=True)
+def add_book(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        author = request.POST.get('author')  # Assuming you are passing author ID
+        Book.objects.create(title=title, author_id=author)
+        return redirect('book_list')  # Redirect to a page that lists books
+    return render(request, 'relationship_app/add_book.html')
+
+# View to edit a book (only users with 'can_change_book' permission can access)
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        book.title = request.POST.get('title')
+        book.author_id = request.POST.get('author')  # Assuming you are passing author ID
+        book.save()
+        return redirect('book_list')  # Redirect to a page that lists books
+    return render(request, 'relationship_app/edit_book.html', {'book': book})
+
+# View to delete a book (only users with 'can_delete_book' permission can access)
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    book.delete()
+    return redirect('book_list')  # Redirect to a page that lists books
