@@ -142,3 +142,32 @@ def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book.delete()
     return redirect('book_list')  # Redirect to a page that lists books
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Book
+from .forms import BookForm  # Assuming you have a BookForm defined
+
+# Add Book View
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('add_book')  # Redirect to the same page or a different one after saving
+    else:
+        form = BookForm()
+
+    return render(request, 'add_book.html', {'form': form})
+
+# Edit Book View
+def edit_book(request, id):
+    book = get_object_or_404(Book, id=id)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('edit_book', id=book.id)  # Redirect to the same page or another after saving
+    else:
+        form = BookForm(instance=book)
+
+    return render(request, 'edit_book.html', {'form': form, 'book': book})
