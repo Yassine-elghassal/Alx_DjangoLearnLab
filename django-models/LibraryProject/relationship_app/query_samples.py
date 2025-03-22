@@ -3,17 +3,17 @@ import os
 import django
 
 # Set up Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_models.settings')  # Replace with your project name
 django.setup()
 
-from relationship_app.models import Author, Book, Library, Librarian
+from relationship_app.models import Author, Book, Library, Librarian # type: ignore
 
 def query_books_by_author(author_name):
     try:
-        # Query for the author
+        # Fetch the author by name
         author = Author.objects.get(name=author_name)
         
-        # Get all books by the author
+        # Query all books by the author
         books = Book.objects.filter(author=author)
         
         print(f"Books by {author_name}:")
@@ -24,11 +24,11 @@ def query_books_by_author(author_name):
 
 def list_all_books_in_library(library_name):
     try:
-        # Query for the library
+        # Fetch the library by name
         library = Library.objects.get(name=library_name)
         
-        # Get all books in the library
-        books = Book.objects.filter(library=library)
+        # Get all books in the library (ManyToMany relationship)
+        books = library.books.all()
         
         print(f"Books in the library '{library_name}':")
         for book in books:
@@ -38,10 +38,10 @@ def list_all_books_in_library(library_name):
 
 def retrieve_librarian_for_library(library_name):
     try:
-        # Query for the library
+        # Fetch the library by name
         library = Library.objects.get(name=library_name)
         
-        # Get the librarian for the library
+        # Get the librarian for the library (OneToOne relationship)
         librarian = Librarian.objects.get(library=library)
         
         print(f"Librarian for the library '{library_name}': {librarian.name}")
