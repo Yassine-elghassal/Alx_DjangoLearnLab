@@ -1,30 +1,57 @@
-# models.py
-from django.db import models
+# query_samples.py
+import os
+import django
 
-class Author(models.Model):
-    name = models.CharField(max_length=100)
+# Set up Django environment
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
+django.setup()
 
-    def __str__(self):
-        return self.name
+from relationship_app.models import Author, Book, Library, Librarian
 
-class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    library = models.ForeignKey('Library', on_delete=models.CASCADE)
+def query_books_by_author(author_name):
+    try:
+        # Query for the author
+        author = Author.objects.get(name=author_name)
+        
+        # Get all books by the author
+        books = Book.objects.filter(author=author)
+        
+        print(f"Books by {author_name}:")
+        for book in books:
+            print(book.title)
+    except Author.DoesNotExist:
+        print(f"No author found with the name {author_name}")
 
-    def __str__(self):
-        return self.title
+def list_all_books_in_library(library_name):
+    try:
+        # Query for the library
+        library = Library.objects.get(name=library_name)
+        
+        # Get all books in the library
+        books = Book.objects.filter(library=library)
+        
+        print(f"Books in the library '{library_name}':")
+        for book in books:
+            print(book.title)
+    except Library.DoesNotExist:
+        print(f"No library found with the name {library_name}")
 
-class Library(models.Model):
-    name = models.CharField(max_length=100)
-    location = models.CharField(max_length=200)
+def retrieve_librarian_for_library(library_name):
+    try:
+        # Query for the library
+        library = Library.objects.get(name=library_name)
+        
+        # Get the librarian for the library
+        librarian = Librarian.objects.get(library=library)
+        
+        print(f"Librarian for the library '{library_name}': {librarian.name}")
+    except Library.DoesNotExist:
+        print(f"No library found with the name {library_name}")
+    except Librarian.DoesNotExist:
+        print(f"No librarian assigned for the library '{library_name}'")
 
-    def __str__(self):
-        return self.name
-
-class Librarian(models.Model):
-    name = models.CharField(max_length=100)
-    library = models.OneToOneField(Library, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
+if __name__ == "__main__":
+    # Example queries
+    query_books_by_author("J.K. Rowling")
+    list_all_books_in_library("Central Library")
+    retrieve_librarian_for_library("Central Library")
