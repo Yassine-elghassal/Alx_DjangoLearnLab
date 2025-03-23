@@ -32,6 +32,9 @@ CSRF_COOKIE_SECURE = True  # Ensures CSRF cookies are only sent over HTTPS
 SESSION_COOKIE_SECURE = True  # Ensures session cookies are only sent over HTTPS
 SECURE_SSL_REDIRECT = True  # Forces redirects from HTTP to HTTPS
 SECURE_HSTS_SECONDS = 3600  # Enables HTTP Strict Transport Security for 1 hour (adjust based on your needs)
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'trusted_script_source.com')
+CSP_STYLE_SRC = ("'self'", 'trusted_style_source.com')
 
 
 ALLOWED_HOSTS = []
@@ -61,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
