@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import LogEntry
 from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
@@ -19,3 +20,4 @@ class CustomUserAdmin(UserAdmin):
 
 # Register the custom user admin
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(LogEntry)

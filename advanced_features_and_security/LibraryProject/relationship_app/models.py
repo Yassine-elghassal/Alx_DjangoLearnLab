@@ -1,6 +1,8 @@
 # relationship_app/models.py
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+
 
 # Author model: This will store author names
 class Author(models.Model):
@@ -33,7 +35,7 @@ class Library(models.Model):
 
 # Librarian model: This will store librarian names, each assigned to a specific library (OneToOne relationship)
 class Librarian(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)  # Allow null for existing records
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Allow null for existing records
     name = models.CharField(max_length=100)
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
 
@@ -43,7 +45,7 @@ class Librarian(models.Model):
 
 # UserProfile model: This model will extend the User model
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     role = models.CharField(max_length=50, choices=[('Admin', 'Admin'), ('Librarian', 'Librarian'), ('Member', 'Member')])
 
     def __str__(self):
