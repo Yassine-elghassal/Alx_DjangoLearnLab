@@ -12,9 +12,8 @@ class Author(models.Model):
 
 # Book model: This will store book titles, linked to an author through ForeignKey
 class Book(models.Model):
-    title = models.CharField(max_length=255)
-    author = models.CharField(max_length=255)
-    published_date = models.DateField()
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title
@@ -22,7 +21,7 @@ class Book(models.Model):
 
 # Library model: This will store library names and their associated books (ManyToMany relationship)
 class Library(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=100)
     books = models.ManyToManyField(Book)
 
     def __str__(self):
@@ -61,15 +60,4 @@ class Book(models.Model):
         ]
     
     def __str__(self):
-
-
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-
-class CustomUser(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True)
-    profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
-
-    def __str__(self):
-        return self.username
-
+        return self.title
