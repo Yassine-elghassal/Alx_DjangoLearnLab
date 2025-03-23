@@ -65,3 +65,21 @@ class CustomUser(AbstractUser):
     # Remove custom fields for groups and user_permissions to use the defaults from AbstractUser
     def __str__(self):
         return self.username
+
+from django.db import models
+
+class Book(models.Model):
+    title = models.CharField(max_length=100)
+    author = models.CharField(max_length=100)
+    published_date = models.DateField()
+
+    class Meta:
+        permissions = [
+            ("can_view", "Can view the book"),
+            ("can_create", "Can create a book"),
+            ("can_edit", "Can edit the book"),
+            ("can_delete", "Can delete the book"),
+        ]
+
+    def __str__(self):
+        return self.title
