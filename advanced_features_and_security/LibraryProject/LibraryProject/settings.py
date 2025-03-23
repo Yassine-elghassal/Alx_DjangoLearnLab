@@ -35,6 +35,26 @@ SECURE_HSTS_SECONDS = 3600  # Enables HTTP Strict Transport Security for 1 hour 
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", 'trusted_script_source.com')
 CSP_STYLE_SRC = ("'self'", 'trusted_style_source.com')
+# settings.py
+
+# Enforce HTTPS redirection
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow the domain to be included in the preload list
+# Enforce HTTP Strict Transport Security (HSTS) for 1 year (31536000 seconds)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+
+# Ensure all subdomains are included in HSTS
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# Allow the domain to be preloaded in browsers' HSTS list
+SECURE_HSTS_PRELOAD = True
+# Ensure cookies are only transmitted over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 
 ALLOWED_HOSTS = []
