@@ -1,4 +1,3 @@
-# managers.py
 from django.contrib.auth.models import BaseUserManager
 
 class CustomUserManager(BaseUserManager):
@@ -14,7 +13,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
-        user.set_password(password)  # Ensure the password is hashed
+        user.set_password(password)  # Ensure password is hashed
         user.save(using=self._db)
         return user
 

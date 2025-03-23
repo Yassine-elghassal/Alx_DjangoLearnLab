@@ -39,3 +39,30 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from .managers import CustomUserManager
+
+class CustomUser(AbstractUser):
+    date_of_birth = models.DateField(null=True, blank=True)
+    profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
+
+    # Attach the custom manager to the model
+    objects = CustomUserManager()
+
+    # Avoid clashes by adding related_name to the groups and user_permissions fields
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='customuser_set',  # Custom related name for groups
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='customuser_set',  # Custom related name for user_permissions
+        blank=True
+    )
+
+    def __str__(self):
+        return self.username
+
+
