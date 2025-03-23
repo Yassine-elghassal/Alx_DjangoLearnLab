@@ -12,11 +12,14 @@ class Author(models.Model):
 
 # Book model: This will store book titles, linked to an author through ForeignKey
 class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    published_date = models.DateField()
+
     def __str__(self):
         return self.title
+    class Meta:
+        abstract = True
 
 
 # Library model: This will store library names and their associated books (ManyToMany relationship)
