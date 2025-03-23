@@ -55,6 +55,11 @@ SECURE_HSTS_PRELOAD = True
 # Ensure cookies are only transmitted over HTTPS
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+# settings.py
+
+# Secure proxy header configuration for SSL support when behind a proxy (e.g., Nginx, Apache)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 ALLOWED_HOSTS = []
