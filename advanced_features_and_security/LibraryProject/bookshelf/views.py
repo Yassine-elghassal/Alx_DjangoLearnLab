@@ -36,3 +36,22 @@ def book_delete(request, pk):
     book = get_object_or_404(Book, pk=pk)
     book.delete()
     return redirect('book_list')
+
+# LibraryProject/bookshelf/views.py
+
+# LibraryProject/bookshelf/views.py
+
+from django.shortcuts import render
+from .forms import ExampleForm  # Add this line to import ExampleForm
+
+# Your view logic here
+def example_view(request):
+    if request.method == "POST":
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Process the form data
+            pass
+    else:
+        form = ExampleForm()  # Create a new empty form
+
+    return render(request, 'bookshelf/form_example.html', {'form': form})
