@@ -11,7 +11,6 @@ class Book(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author} ({self.publication_year})"
 
-# models.py
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from .managers import CustomUserManager
@@ -23,5 +22,20 @@ class CustomUser(AbstractUser):
     # Attach the custom manager
     objects = CustomUserManager()
 
+    # Explicitly define related_name to avoid clashes
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='customuser_set',
+        blank=True,
+        help_text='The groups this user belongs to.'
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='customuser_set',
+        blank=True,
+        help_text='Specific permissions for this user.'
+    )
+
     def __str__(self):
         return self.username
+
