@@ -66,7 +66,7 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import SearchFilter, OrderingFilter  # Correct import
 from .models import Book
 from .serializers import BookSerializer
 from django_filters import rest_framework as filters
@@ -88,7 +88,7 @@ class BookListView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]  # Allow read-only access for unauthenticated users
 
     # Add filtering, searching, and ordering capabilities
-    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)  # Correct filter backends
     filterset_class = BookFilter  # Apply the BookFilter class to handle the filtering logic
     search_fields = ['title', 'author']  # Allow searching by title and author
     ordering_fields = ['title', 'publication_year']  # Allow ordering by title or publication year
