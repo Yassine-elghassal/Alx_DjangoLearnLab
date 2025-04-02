@@ -27,3 +27,15 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write a comment...'}),
         }
+
+from django import forms
+from .models import Post
+from taggit.forms import TagWidget  # Import TagWidget
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']
+        widgets = {
+            'tags': TagWidget(),  # Use TagWidget for tag input
+        }
