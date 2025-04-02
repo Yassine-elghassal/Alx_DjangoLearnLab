@@ -24,14 +24,15 @@ class BookCreateView(generics.CreateAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # Requires authentication to create a book
 
-# UpdateView - Modify an existing book
+# UpdateView for modifying an existing book
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # Requires authentication to update a book
 
-# DeleteView - Remove a book
+# DeleteView for removing a book
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # Requires authentication to delete a book
+
