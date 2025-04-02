@@ -63,50 +63,21 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # Only authenticated users can modify or delete a book
 
-# api/views.py
-from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework import filters, generics
 from .models import Book
 from .serializers import BookSerializer
-from django_filters import rest_framework as filters
 
-# Filter class to filter books by title, author, and publication_year
-class BookFilter(django_filters.FilterSet):
-    title = django_filters.CharFilter(lookup_expr='icontains')  # Allows case-insensitive partial match for title
-    author = django_filters.CharFilter(lookup_expr='icontains')  # Allows case-insensitive partial match for author
-    publication_year = django_filters.NumberFilter()  # Filters by publication year
-
-    class Meta:
-        model = Book
-        fields = ['title', 'author', 'publication_year']
-
-# BookListView: List and Create View for Book, includes filtering, search, and ordering
-class BookListView(generics.ListCreateAPIView):
+class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # Allow read-only access for unauthenticated users
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
 
-    # Add filtering, searching, and ordering capabilities
-    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
-    filterset_class = BookFilter  # Apply the BookFilter class to handle the filtering logic
-    search_fields = ['title', 'author']  # Allow searching by title and author
-    ordering_fields = ['title', 'publication_year']  # Allow ordering by title or publication year
-    ordering = ['title']  # Default ordering by title
+    # Filtering fields
+    filterset_fields = ['title', 'author', 'publication_year']
 
-from django_filters import rest_framework as filters
-from rest_framework import viewsets
-from rest_framework.filters import SearchFilter, OrderingFilter
+    # Search fields
+    search_fields = ['title', 'author']
 
-from poinkbackend.apps.categories.api.serializers import CategoryTreeSerializer
-from poinkbackend.apps.categories.models import Category
-
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    __basic_fields = ('name', 'menu__name', 'menu__description')
-    queryset = Category.objects.all()
-    serializer_class = CategoryTreeSerializer
-    filter_backends = (filters.DjangoFilterBackend, SearchFilter, OrderingFilter)
-    filter_fields = __basic_fields
-    search_fields = __basic_fields
+    # Ordering fields
+    ordering_fields = ['title', 'publication_year']
