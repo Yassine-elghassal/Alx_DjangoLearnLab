@@ -74,17 +74,17 @@ def unlike_post(request, pk):
     else:
         return Response({"message": "You haven't liked this post!"}, status=status.HTTP_400_BAD_REQUEST)
 
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from django.shortcuts import get_object_or_404
 from .models import Post, Like
 from notifications.models import Notification
-from django.contrib.auth import get_user_model
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def like_post(request, pk):
+    # Fetch the post or return 404 if not found
     post = get_object_or_404(Post, pk=pk)
 
     # Check if user already liked the post
@@ -107,6 +107,7 @@ def like_post(request, pk):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def unlike_post(request, pk):
+    # Fetch the post or return 404 if not found
     post = get_object_or_404(Post, pk=pk)
 
     # Find the like object
