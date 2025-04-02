@@ -94,3 +94,19 @@ class BookListView(generics.ListCreateAPIView):
     search_fields = ['title', 'author']  # Allow searching by title and author
     ordering_fields = ['title', 'publication_year']  # Allow ordering by title or publication year
     ordering = ['title']  # Default ordering by title
+
+from django_filters import rest_framework as filters
+from rest_framework import viewsets
+from rest_framework.filters import SearchFilter, OrderingFilter
+
+from poinkbackend.apps.categories.api.serializers import CategoryTreeSerializer
+from poinkbackend.apps.categories.models import Category
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    __basic_fields = ('name', 'menu__name', 'menu__description')
+    queryset = Category.objects.all()
+    serializer_class = CategoryTreeSerializer
+    filter_backends = (filters.DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields
