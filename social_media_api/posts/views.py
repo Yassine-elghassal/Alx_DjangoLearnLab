@@ -35,7 +35,7 @@ class FeedView(generics.ListAPIView):
 
 from rest_framework import status, permissions
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404  # Import from django.shortcuts
+from django.shortcuts import get_object_or_404  # Correct import from django.shortcuts
 from .models import Post, Like
 from notifications.models import Notification
 from rest_framework.decorators import api_view, permission_classes
