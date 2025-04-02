@@ -36,30 +36,29 @@ class FeedView(generics.ListAPIView):
 
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404  # ✅ Make sure this is imported
 from .models import Post, Like
-from notifications.models import Notification  # ✅ Import Notification model
+from notifications.models import Notification
 from .serializers import PostSerializer
 
 class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        # ✅ Get the post object
-        post = get_object_or_404(Post, pk=pk)
+        # ✅ Using get_object_or_404 to fetch the post
+        post = generics.get_object_or_404(Post, pk=pk)  
 
-        # ✅ Check if the user has already liked the post
         like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if not created:
             like.delete()
             return Response({"message": "Like removed"}, status=status.HTTP_204_NO_CONTENT)
 
-        # ✅ Create a notification when a user likes a post
-        if request.user != post.author:  # Prevent self-notifications
+        # ✅ Ensure notification is created when someone likes a post
+        if request.user != post.author:
             Notification.objects.create(
-                recipient=post.author,  # Post owner gets notified
-                actor=request.user,  # The user who liked the post
+                recipient=post.author,
+                actor=request.user,
                 verb="liked",
                 target=post
             )
