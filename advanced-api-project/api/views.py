@@ -63,19 +63,20 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # Only authenticated users can modify or delete a book
 
+# api/views.py
 from rest_framework import generics
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.filters import SearchFilter, OrderingFilter  # Correct import
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
-from django_filters import rest_framework as filters
+import django_filters
 
 # Filter class to filter books by title, author, and publication_year
-class BookFilter(filters.FilterSet):
-    title = filters.CharFilter(lookup_expr='icontains')  # Allows case-insensitive partial match for title
-    author = filters.CharFilter(lookup_expr='icontains')  # Allows case-insensitive partial match for author
-    publication_year = filters.NumberFilter()  # Filters by publication year
+class BookFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(lookup_expr='icontains')  # Allows case-insensitive partial match for title
+    author = django_filters.CharFilter(lookup_expr='icontains')  # Allows case-insensitive partial match for author
+    publication_year = django_filters.NumberFilter()  # Filters by publication year
 
     class Meta:
         model = Book
@@ -88,7 +89,7 @@ class BookListView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]  # Allow read-only access for unauthenticated users
 
     # Add filtering, searching, and ordering capabilities
-    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)  # Correct filter backends
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
     filterset_class = BookFilter  # Apply the BookFilter class to handle the filtering logic
     search_fields = ['title', 'author']  # Allow searching by title and author
     ordering_fields = ['title', 'publication_year']  # Allow ordering by title or publication year
