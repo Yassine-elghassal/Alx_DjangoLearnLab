@@ -38,20 +38,30 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Post, Like
+from notifications.models import Notification  # ✅ Import Notification model
 from .serializers import PostSerializer
 
 class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        # ✅ Fix: Use get_object_or_404
-        post = generics.get_object_or_404(Post, pk=pk)
+        # ✅ Get the post object
+        post = get_object_or_404(Post, pk=pk)
 
-        # ✅ Fix: Use Like.objects.get_or_create
+        # ✅ Check if the user has already liked the post
         like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if not created:
             like.delete()
             return Response({"message": "Like removed"}, status=status.HTTP_204_NO_CONTENT)
+
+        # ✅ Create a notification when a user likes a post
+        if request.user != post.author:  # Prevent self-notifications
+            Notification.objects.create(
+                recipient=post.author,  # Post owner gets notified
+                actor=request.user,  # The user who liked the post
+                verb="liked",
+                target=post
+            )
 
         return Response({"message": "Post liked"}, status=status.HTTP_201_CREATED)
