@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 # Import necessary modules
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly  # Correct permission imports
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly  # Importing the required permissions
 from .models import Book
 from .serializers import BookSerializer
 
@@ -36,3 +36,4 @@ class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # Only authenticated users can delete
+
