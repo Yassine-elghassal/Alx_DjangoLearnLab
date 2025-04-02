@@ -35,7 +35,7 @@ class FeedView(generics.ListAPIView):
 
 from rest_framework import status, generics, permissions
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404  # Correct import
 from .models import Post, Like
 from notifications.models import Notification
 from rest_framework.decorators import api_view, permission_classes
@@ -43,7 +43,7 @@ from rest_framework.decorators import api_view, permission_classes
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(Post, pk=pk)  # Correct usage of get_object_or_404
     like, created = Like.objects.get_or_create(user=request.user, post=post)
 
     if created:
@@ -61,7 +61,7 @@ def like_post(request, pk):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def unlike_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(Post, pk=pk)  # Correct usage of get_object_or_404
     like = Like.objects.filter(user=request.user, post=post)
 
     if like.exists():
