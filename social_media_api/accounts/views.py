@@ -61,3 +61,17 @@ class UnfollowUserView(generics.GenericAPIView):
         user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
         request.user.following.remove(user_to_unfollow)
         return Response({"message": f"You have unfollowed {user_to_unfollow.username}"}, status=status.HTTP_200_OK)
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import permissions
+from .models import Notification
+from .serializers import NotificationSerializer
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_notifications(request):
+    notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
+    serializer = NotificationSerializer(notifications, many=True)
+    return Response(serializer.data)
