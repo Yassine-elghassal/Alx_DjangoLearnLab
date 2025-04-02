@@ -46,17 +46,10 @@ urlpatterns = [
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
 ]
 
-# blog/views.py
+from django.urls import path
+from .views import search_posts
 
-from django.shortcuts import render, get_object_or_404
-from .models import Post
-from taggit.models import Tag
-
-def posts_by_tag(request, tag_slug):
-    # Get the tag object by its slug
-    tag = get_object_or_404(Tag, slug=tag_slug)
-    
-    # Filter posts by the selected tag
-    posts = Post.objects.filter(tags=tag)
-
-    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag})
+urlpatterns = [
+    path('search/', search_posts, name='search-posts'),
+    path('tags/<slug:tag>/', posts_by_tag, name='posts-by-tag'),
+]
