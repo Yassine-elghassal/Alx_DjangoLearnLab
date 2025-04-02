@@ -18,8 +18,9 @@ urlpatterns = [
 ]
 
 from django.urls import path
-from .views import LikePostView
+from .views import LikePostView, UnlikePostView
 
 urlpatterns = [
-    path('posts/<int:pk>/like/', LikePostView.as_view(), name='like-post'),
+    path('<int:pk>/like/', LikePostView.as_view(), name='like-post'),
+    path('<int:pk>/unlike/', UnlikePostView.as_view(), name='unlike-post'),  # ✅ Make sure this exists!
 ]
