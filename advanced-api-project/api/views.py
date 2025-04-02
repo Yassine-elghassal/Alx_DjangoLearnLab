@@ -65,12 +65,12 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # api/views.py
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.filters import SearchFilter, OrderingFilter  # Correct import
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Book
 from .serializers import BookSerializer
-import django_filters
+from django_filters import rest_framework as filters
 
 # Filter class to filter books by title, author, and publication_year
 class BookFilter(django_filters.FilterSet):
