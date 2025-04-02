@@ -121,18 +121,19 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return reverse('post-detail', kwargs={'pk': self.object.post.id})
 
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q  # Import Q for complex queries
 from .models import Post
 
 def search_posts(request):
-    query = request.GET.get('q')
-    results = Post.objects.all()  # Default to all posts
+    query = request.GET.get('q')  # Get the search query from the GET request
+    results = Post.objects.all()  # Default to all posts if no query is provided
 
     if query:
+        # Filter posts where title, content, or tags contain the query
         results = results.filter(
             Q(title__icontains=query) |  # Search by title
             Q(content__icontains=query) |  # Search by content
-            Q(tags__name__icontains=query)  # Search by tag
-        ).distinct()  # Remove duplicate posts if they match multiple fields
+            Q(tags__name__icontains=query)  # Search by tags
+        ).distinct()  # Ensure no duplicate posts if they match multiple fields
 
     return render(request, 'blog/search_results.html', {'results': results, 'query': query})
