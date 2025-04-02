@@ -1,0 +1,17 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<h2>Blog Posts</h2>
+{% for post in posts %}
+    <article>
+        <h3><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
+        <p>By {{ post.author }} on {{ post.created_at }}</p>
+        <p>{{ post.content|truncatewords:20 }}</p>
+        {% if user.is_authenticated and user == post.author %}
+            <a href="{% url 'post-edit' post.id %}">Edit</a> |
+            <a href="{% url 'post-delete' post.id %}">Delete</a>
+        {% endif %}
+    </article>
+{% endfor %}
+<a href="{% url 'post-create' %}">Create New Post</a>
+{% endblock %}
