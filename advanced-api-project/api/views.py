@@ -63,3 +63,42 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # Only authenticated users can modify or delete a book
 
+from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .models import Book
+from .serializers import BookSerializer
+from django_filters import rest_framework as filters
+
+# Filter class to filter books by title, author, and publication_year
+class BookFilter(filters.FilterSet):
+    title = filters.CharFilter(lookup_expr='icontains')  # Partial match for title
+    author = filters.CharFilter(lookup_expr='icontains')  # Partial match for author
+    publication_year = filters.NumberFilter()
+
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'publication_year']
+
+from rest_framework.filters import SearchFilter
+
+class BookListView(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = (DjangoFilterBackend, SearchFilter)  # Add SearchFilter
+    filterset_class = BookFilter
+    search_fields = ['title', 'author']  # Enable search on title and author
+
+from rest_framework.filters import OrderingFilter
+
+class BookListView(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)  # Add OrderingFilter
+    filterset_class = BookFilter
+    search_fields = ['title', 'author']
+    ordering_fields = ['title', 'publication_year']  # Enable ordering by title and publication_year
+    ordering = ['title']  # Default ordering by title
+
