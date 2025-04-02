@@ -67,6 +67,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
 from .models import Book
 from .serializers import BookSerializer
+from django_filters import rest_framework as django_filters
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
