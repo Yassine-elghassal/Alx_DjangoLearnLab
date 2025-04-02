@@ -90,4 +90,3 @@ class BookListView(generics.ListCreateAPIView):
     search_fields = ['title', 'author']  # Enable search on title and author
     ordering_fields = ['title', 'publication_year']  # Enable ordering by title and publication_year
     ordering = ['title']  # Default ordering by title
-
