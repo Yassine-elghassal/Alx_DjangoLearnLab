@@ -137,3 +137,20 @@ def search_posts(request):
         ).distinct()  # Ensure no duplicate posts if they match multiple fields
 
     return render(request, 'blog/search_results.html', {'results': results, 'query': query})
+
+from django.shortcuts import render
+from .models import Post
+
+def post_list(request):
+    posts = Post.objects.filter(status="published")  # Ensure filtering is used
+    return render(request, "blog/post_list.html", {"posts": posts})
+
+from django.shortcuts import render, get_object_or_404
+from .models import Post
+from taggit.models import Tag  # Ensure you're using taggit for tagging
+
+def posts_by_tag(request, tag):
+    tag_obj = get_object_or_404(Tag, slug=tag)  # Get the tag object based on its slug
+    posts = Post.objects.filter(tags=tag_obj)  # Filter posts by the tag
+
+    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag_obj})
