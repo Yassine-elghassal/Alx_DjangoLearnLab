@@ -43,14 +43,13 @@ from rest_framework.decorators import api_view, permission_classes
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def like_post(request, pk):
-    # Use get_object_or_404 correctly here to fetch the Post
+    # Correctly use get_object_or_404 here
     post = get_object_or_404(Post, pk=pk)
     
-    # Create or get the Like object for the given post
     like, created = Like.objects.get_or_create(user=request.user, post=post)
 
     if created:
-        # Create a notification for the post author
+        # Generate a notification when a post is liked
         Notification.objects.create(
             recipient=post.author,
             actor=request.user,
@@ -64,10 +63,9 @@ def like_post(request, pk):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def unlike_post(request, pk):
-    # Use get_object_or_404 correctly here to fetch the Post
+    # Correctly use get_object_or_404 here as well
     post = get_object_or_404(Post, pk=pk)
 
-    # Check if the user has already liked the post
     like = Like.objects.filter(user=request.user, post=post)
 
     if like.exists():
